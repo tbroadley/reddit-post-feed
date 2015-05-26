@@ -4,11 +4,15 @@ import json
 import html
 import psycopg2
 from tumblpy import Tumblpy, TumblpyError
+import time
 
 log_file = open("log/main.log", "a")
 
 def cleanup():
   log_file.close()
+
+def log(str):
+  log_file.write("{0} {1}\n".format(time.ctime(), str))
 
 def main():
   # Read JSON file to retrieve passwords and API keys
@@ -52,9 +56,9 @@ def try_get_json(url, times):
   for i in range(1, times):
     try:
       return get_json_from_url(url)
-    except Error as e:
-      err_str = "Could not get JSON at '{0}', retrying ({1} out of {2} times)\n"
-      log_file.write(err_str.format(url, i, times - 1))
+    except Exception as e:
+      err_str = "Could not get JSON at '{0}' (attempt {1} of {2})"
+      log(err_str.format(url, i, times))
 
 # Returns the contents of a JSON webpage as a Python object.
 def get_json_from_url(url):
@@ -88,13 +92,13 @@ def post_to_tumblr(tpy, data, options):
   params = get_post_params(post_type, all_tags, url, title, \
                            "reddit.com" + data["permalink"])
 
-  log_file.write("{0}\n".format(params))
+  log("{0}\n".format(params))
 
   try:
     post = tpy.post("post", blog_url = blog_url, params = params)
     return True
   except TumblpyError as e:
-    log_file.write("TumblpyError: {0}\n".format(e))
+    log("TumblpyError: {0}\n".format(e))
     return False
 
 # Turn imgur.com links into direct image links.
