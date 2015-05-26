@@ -1,7 +1,6 @@
 import urllib.request
 from urllib.parse import urlparse, urlunparse
 import json
-import html
 import psycopg2
 from tumblpy import Tumblpy, TumblpyError
 import time
