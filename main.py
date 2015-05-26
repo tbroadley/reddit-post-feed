@@ -104,7 +104,7 @@ def to_direct_link(url):
     # return urlunparse([p.scheme, p.netloc, p.path[:-1], "", "", ""])
     # TODO: changing .gifv extension to .gif does not let tumblr upload it.
     return url
-  elif p.netloc == "imgur.com" and "gallery" not in p.path and "a" not in p.path:
+  elif p.netloc == "imgur.com" and "gallery" not in p.path and "a/" not in p.path:
     return urlunparse([p.scheme, "i.imgur.com", p.path + ".gif", "", "", ""])
   else:
     return url
