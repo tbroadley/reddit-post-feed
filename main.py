@@ -14,14 +14,14 @@ def main():
   # Read JSON file to retrieve passwords and API keys
   with open("secret.json", "r") as secret:
     secret_json = json.loads(secret.read())
-    
+
   db = secret_json["db"]
   tumblr_api = secret_json["tumblr_api"]
-  
+
   # Load the top posts from /r/all
   front_url = "http://www.reddit.com/r/all.json"
   front_json = try_get_json(front_url, 3)
-  
+
   # Connect to the database and create a cursor
   conn_string = "dbname={0} user={1} password={2}".format(db["dbname"], \
                                                           db["user"], \
@@ -29,7 +29,7 @@ def main():
   cursor = psycopg2.connect(conn_string).cursor()
 
   # Create a Tumblpy object, used to interact with the Tumblr API.
-  tpy = Tumblpy(tumblr_api["consumer-public"], 
+  tpy = Tumblpy(tumblr_api["consumer-public"],
                 tumblr_api["consumer-secret"],
                 tumblr_api["oauth-public"],
                 tumblr_api["oauth-secret"])
@@ -45,7 +45,7 @@ def main():
       # post_to_tumblr returns True if it successfully creates a post.
       if post_to_tumblr(tpy, post_data, tumblr_post_options):
         add_post_to_db(cursor, post_data)
-      
+
 
 # Try a given number of times to query JSON data from a web page.
 def try_get_json(url, times):
@@ -55,7 +55,7 @@ def try_get_json(url, times):
     except Error as e:
       err_str = "Could not get JSON at '{0}', retrying ({1} out of {2} times)\n"
       log_file.write(err_str.format(url, i, times - 1))
-      
+
 # Returns the contents of a JSON webpage as a Python object.
 def get_json_from_url(url):
   response = urllib.request.urlopen(url)
@@ -78,7 +78,7 @@ def add_post_to_db(cursor, data):
 def post_to_tumblr(tpy, data, options):
   title = data["title"]
   url = to_direct_link(data["url"])
-  
+
   blog_url = options["blog_url"]
   all_tags = options["default_tags"] + "," + \
              data["subreddit"] + "," + \
@@ -87,7 +87,7 @@ def post_to_tumblr(tpy, data, options):
   post_type = get_post_type(url)
   params = get_post_params(post_type, all_tags, url, title, \
                            "reddit.com" + data["permalink"])
-  
+
   log_file.write("{0}\n".format(params))
 
   try:
@@ -108,7 +108,7 @@ def to_direct_link(url):
     return urlunparse([p.scheme, "i.imgur.com", p.path + ".gif", "", "", ""])
   else:
     return url
-    
+
 # Returns the type of post to create for a given URL.
 def get_post_type(url):
   if url[url.rfind(".") + 1:] in ["gif", "jpeg", "jpg", "png"]:
@@ -122,7 +122,7 @@ def get_post_type(url):
 def get_post_params(post_type, tags, url, title, permalink):
   default_params = {"state": "published", "tags": tags}
   extra_params = {"photo": {"caption": title, "source": url, "link": permalink},
-                  "video": {"caption": title, "embed": url}, 
+                  "video": {"caption": title, "embed": url},
                   "link": {"title": title, "url": url}}
   params_with_post_type = dict(default_params, type = post_type)
   return dict(params_with_post_type, **extra_params[post_type])
