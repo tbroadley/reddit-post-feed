@@ -93,7 +93,7 @@ def post_to_tumblr(tpy, data, options):
   params = get_post_params(post_type, all_tags, url, title, \
                            "reddit.com" + data["permalink"])
 
-  log("{0}\n".format(params))
+  log(params)
 
   try:
     post = tpy.post("post", blog_url = blog_url, params = params)
