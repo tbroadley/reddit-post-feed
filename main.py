@@ -41,13 +41,14 @@ def main():
   tumblr_post_options = {"blog_url": "redditpostfeed.tumblr.com",
                          "default_tags": "reddit"}
 
-  for post in front_json["data"]["children"]:
-    post_data = post["data"]
+  if front_json is not None:
+    for post in front_json["data"]["children"]:
+      post_data = post["data"]
 
-    if post_is_new(cursor, post_data):
-      # post_to_tumblr returns True if it successfully creates a post.
-      if post_to_tumblr(tpy, post_data, tumblr_post_options):
-        add_post_to_db(cursor, post_data)
+      if post_is_new(cursor, post_data):
+        # post_to_tumblr returns True if it successfully creates a post.
+        if post_to_tumblr(tpy, post_data, tumblr_post_options):
+          add_post_to_db(cursor, post_data)
 
 
 # Try a given number of times to query JSON data from a web page.
