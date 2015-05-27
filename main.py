@@ -59,6 +59,7 @@ def try_get_json(url, times):
     except Exception as e:
       err_str = "Could not get JSON at '{0}' (attempt {1} of {2})"
       log(err_str.format(url, i, times))
+  log("Could not get JSON.")
 
 # Returns the contents of a JSON webpage as a Python object.
 def get_json_from_url(url):
