@@ -10,8 +10,8 @@ log_file = open("log/main.log", "a")
 def cleanup():
   log_file.close()
 
-def log(str):
-  log_file.write("{0} {1}\n".format(time.ctime(), str))
+def log(to_log):
+  log_file.write("{0} {1}\n".format(time.ctime(), str(to_log).encode("utf-8")))
 
 def main():
   # Read JSON file to retrieve passwords and API keys
