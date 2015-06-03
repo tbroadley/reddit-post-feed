@@ -40,7 +40,8 @@ def main():
 
   # Set some options used to create the Tumblr post.
   tumblr_post_options = {"blog_url": "redditpostfeed.tumblr.com",
-                         "default_tags": "reddit"}
+                         "default_tags": "reddit",
+                         "post_nsfw": secret_json["post_nsfw"]}
 
   if front_json is not None:
     for post in front_json["data"]["children"]:
@@ -82,26 +83,27 @@ def add_post_to_db(cursor, data):
 
 # Create a Tumblr post.
 def post_to_tumblr(tpy, data, options):
-  title = html.parser.HTMLParser().unescape(data["title"])
-  url = to_direct_link(data["url"])
+  if options["post_nsfw"] or not data["over_18"]:
+    title = html.parser.HTMLParser().unescape(data["title"])
+    url = to_direct_link(data["url"])
 
-  blog_url = options["blog_url"]
-  all_tags = options["default_tags"] + "," + \
-             data["subreddit"] + "," + \
-             ("nsfw" if data["over_18"] else "")
+    blog_url = options["blog_url"]
+    all_tags = options["default_tags"] + "," + \
+               data["subreddit"] + "," + \
+               ("nsfw" if data["over_18"] else "")
 
-  post_type = get_post_type(url)
-  params = get_post_params(post_type, all_tags, url, title, \
-                           "reddit.com" + data["permalink"])
+    post_type = get_post_type(url)
+    params = get_post_params(post_type, all_tags, url, title, \
+                             "reddit.com" + data["permalink"])
 
-  log(params)
+    log(params)
 
-  try:
-    post = tpy.post("post", blog_url = blog_url, params = params)
-    return True
-  except TumblpyError as e:
-    log("TumblpyError: {0}\n".format(e))
-    return False
+    try:
+      post = tpy.post("post", blog_url = blog_url, params = params)
+      return True
+    except TumblpyError as e:
+      log("TumblpyError: {0}\n".format(e))
+      return False
 
 # Turn imgur.com links into direct image links.
 def to_direct_link(url):
