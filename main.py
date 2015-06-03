@@ -76,8 +76,8 @@ def post_is_new(cursor, data):
 
 # Add a post to the database.
 def add_post_to_db(cursor, data):
-  query = "INSERT INTO posts (url, title, subreddit) VALUES (%s, %s, %s)"
-  cursor.execute(query, (data["url"], data["title"], data["subreddit"]))
+  query = "INSERT INTO posts (url) VALUES (%s)"
+  cursor.execute(query, (data["url"],))
   cursor.connection.commit()
 
 # Create a Tumblr post.
