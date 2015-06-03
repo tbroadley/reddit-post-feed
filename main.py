@@ -1,5 +1,6 @@
 import urllib.request
 from urllib.parse import urlparse, urlunparse
+import html.parser
 import json
 import psycopg2
 from tumblpy import Tumblpy, TumblpyError
@@ -81,7 +82,7 @@ def add_post_to_db(cursor, data):
 
 # Create a Tumblr post.
 def post_to_tumblr(tpy, data, options):
-  title = data["title"]
+  title = html.parser.HTMLParser().unescape(data["title"])
   url = to_direct_link(data["url"])
 
   blog_url = options["blog_url"]
