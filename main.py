@@ -16,11 +16,11 @@ def log(to_log):
 
 def main():
   # Read JSON file to retrieve passwords and API keys
-  with open("secret.json", "r") as secret:
-    secret_json = json.loads(secret.read())
+  with open("config.json", "r") as config:
+    config_json = json.loads(config.read())
 
-  db = secret_json["db"]
-  tumblr_api = secret_json["tumblr_api"]
+  db = config_json["db"]
+  tumblr_api = config_json["tumblr_api"]
 
   # Load the top posts from /r/all
   front_url = "http://www.reddit.com/r/all.json"
@@ -41,7 +41,7 @@ def main():
   # Set some options used to create the Tumblr post.
   tumblr_post_options = {"blog_url": "redditpostfeed.tumblr.com",
                          "default_tags": "reddit",
-                         "post_nsfw": secret_json["post_nsfw"]}
+                         "post_nsfw": config_json["post_nsfw"]}
 
   if front_json is not None:
     for post in front_json["data"]["children"]:
