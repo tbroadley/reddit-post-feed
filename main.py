@@ -70,8 +70,8 @@ def get_json_from_url(url):
 
 # Returns whether or not a given post is already included in the database.
 def post_is_new(cursor, data):
-  query = "SELECT * FROM posts where url = %s AND title = %s AND subreddit = %s"
-  cursor.execute(query, (data["url"], data["title"], data["subreddit"]))
+  query = "SELECT * FROM posts where url = %s"
+  cursor.execute(query, (data["url"],))
   return cursor.fetchone() is None
 
 # Add a post to the database.
