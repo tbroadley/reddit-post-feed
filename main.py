@@ -119,9 +119,9 @@ def to_direct_link(url):
 
 # Returns the type of post to create for a given URL.
 def get_post_type(url):
-  if url[url.rfind(".") + 1:] in ["gif", "jpeg", "jpg", "png"]:
+  if url[(url.rfind(".") + 1):] in ["gif", "jpeg", "jpg", "png"]:
     return "photo"
-  elif "youtube." in urlparse(url).netloc:
+  elif urlparse(url).netloc in ("youtube.com", "youtu.be"):
     return "video"
   else:
     return "link"
