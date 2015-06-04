@@ -102,7 +102,7 @@ def post_to_tumblr(tpy, data, options):
       post = tpy.post("post", blog_url = blog_url, params = params)
       return True
     except TumblpyError as e:
-      log("TumblpyError: {0}\n".format(e))
+      log("TumblpyError: {0} Photo URL: {1}".format(e, url))
       return False
 
 # Turn imgur.com links into direct image links.
