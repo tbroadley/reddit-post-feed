@@ -23,7 +23,7 @@ def main():
   tumblr_api = config_json["tumblr_api"]
 
   # Load the top posts from /r/all
-  front_url = "http://www.reddit.com/r/all.json"
+  front_url = config_json["reddit_url"]
   front_json = try_get_json(front_url, 3)
 
   # Connect to the database and create a cursor
@@ -38,18 +38,13 @@ def main():
                 tumblr_api["oauth-public"],
                 tumblr_api["oauth-secret"])
 
-  # Set some options used to create the Tumblr post.
-  tumblr_post_options = {"blog_url": "redditpostfeed.tumblr.com",
-                         "default_tags": "reddit",
-                         "post_nsfw": config_json["post_nsfw"]}
-
   if front_json is not None:
     for post in front_json["data"]["children"]:
       post_data = post["data"]
 
       if post_is_new(cursor, post_data):
         # post_to_tumblr returns True if it successfully creates a post.
-        if post_to_tumblr(tpy, post_data, tumblr_post_options):
+        if post_to_tumblr(tpy, post_data, config_json):
           add_post_to_db(cursor, post_data)
 
 
