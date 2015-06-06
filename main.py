@@ -37,9 +37,10 @@ def main():
                 tumblr_api["consumer-secret"],
                 tumblr_api["oauth-public"],
                 tumblr_api["oauth-secret"])
-
+  
   if front_json is not None:
-    for post in front_json["data"]["children"]:
+    # Only check the top n posts on the front page.
+    for post in front_json["data"]["children"][:config_json["top_n"]]:
       post_data = post["data"]
 
       if post_is_new(cursor, post_data):

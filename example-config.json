@@ -10,4 +10,5 @@
    "consumer-secret": "consumer-secret", 
    "oauth-public": "oauth-public", 
    "oauth-secret": "oauth-secret"},
- "post_nsfw": false}
+ "post_nsfw": false,
+ "top_n": 10}
